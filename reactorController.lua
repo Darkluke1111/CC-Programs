@@ -10,5 +10,5 @@ function wrapReactor()
 end
 
 function reportError(msg)
-  write(msg .. \n)
+  write(msg .. "\n")
 end
