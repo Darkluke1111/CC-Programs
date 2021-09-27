@@ -56,6 +56,6 @@ end
 function logNetwork()
   while true do
     local senderID, msg = rednet.receive("Logging", 10)
-    log(msg.type, "(" .. senderID .. ") " .. msg)
+    log(msg.type, "(" .. senderID .. ") " .. msg.msg)
   end
 end
