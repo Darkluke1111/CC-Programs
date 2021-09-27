@@ -56,11 +56,6 @@ end
 function logNetwork()
   while true do
     local senderID, msg = rednet.receive("Logging", 10)
-    if msg.type == "Error" then
-      logError("[".. senderID .. "] " .. msg.msg)
-    end
-    if msg.type == "Info" then
-      logInfo("[".. senderID .. "] " .. msg.msg)
-    end
+    log(msg.type, "(" .. senderID .. ") " .. msg)
   end
 end
