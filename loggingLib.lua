@@ -1,5 +1,20 @@
 
-
+config = {
+  levels = {
+    "Debug" = {
+      color = colors.blue
+    },
+    "Info" = {
+      color = colors.green
+    },
+    "Warning" = {
+      color = colors.yellow
+    },
+    "Error" = {
+      color = colors.red
+    },
+  }
+}
 
 function openNetwork()
   for _,v in pairs(peripheral.getNames()) do
@@ -9,16 +24,26 @@ function openNetwork()
   end
 end
 
-function logError(msg)
-  writeC("[Error] ", colors.red)
+local function log(loggingLevel, msg)
+  writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
   writeC(msg .. "\n", colors.white)
-  rednet.broadcast({type = "Error", msg = msg}, "Logging")
+  rednet.broadcast({type = loggingLevel, msg = msg}, "Logging")
 end
 
-function logInfo(msg)
-  writeC("[Info] ", colors.yellow)
-  writeC(msg .. "\n", colors.white)
-  rednet.broadcast({type = "Info", msg = msg}, "Logging")
+function debug(msg)
+  log("Debug", msg)
+end
+
+function info(msg)
+  log("Info", msg)
+end
+
+function warning(msg)
+  log("Warning", msg)
+end
+
+function error(msg)
+  log("Error", msg)
 end
 
 function writeC(text, color)

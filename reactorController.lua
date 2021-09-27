@@ -19,29 +19,29 @@ end
 function readConfig()
   if args[1] then
     config.targetmB = tonumber(args[1])
-    log.logInfo("Target mB is set to " .. config.targetmB)
+    log.info("Target mB is set to " .. config.targetmB)
   else
-    log.logInfo("Target mB is set to default of " .. config.targetmB)
+    log.info("Target mB is set to default of " .. config.targetmB)
   end
 end
 
 function wrapReactor()
   for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) == "BigReactors-Reactor" then
-      log.logInfo("Wrapping Reactor at " ..  v)
+      log.info("Wrapping Reactor at " ..  v)
       return peripheral.wrap(v)
     end
   end
-  log.logError(msg)
+  log.error(msg)
 end
 
 function controlReactor(r)
-  log.logInfo("Start controlling...")
+  log.info("Start controlling...")
   while true do
     util.yield()
     os.sleep(1)
     mBt = r.getHotFluidProducedLastTick()
-    log.logInfo("mB/t: " .. mBt)
+    log.info("mB/t: " .. mBt)
     if mBt > config.targetmB then
       adjustFuelRods(r,"up")
     else
