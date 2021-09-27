@@ -9,8 +9,11 @@ end
 
 function readConfig()
   args = {...}
-  config.targetmB = args[1]
-  logInfo("Target mB is set to " .. config.targetmB)
+  if args[1] then
+    config.targetmB = args[1]
+    logInfo("Target mB is set to " .. config.targetmB)
+  else
+    logInfo("Target mB is set to default of " .. config.targetmB)
 end
 
 function wrapReactor()
