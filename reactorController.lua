@@ -1,14 +1,15 @@
+args = {...}
+
 config = {
   targetmB = 0
 }
 
 function main()
-
+  readConfig()
   r = wrapReactor()
 end
 
 function readConfig()
-  args = {...}
   if args[1] then
     config.targetmB = args[1]
     logInfo("Target mB is set to " .. config.targetmB)
@@ -24,6 +25,10 @@ function wrapReactor()
     end
   end
   logError(msg)
+end
+
+function controlReactor()
+  logInfo("Start controlling...")
 end
 
 function logError(msg)
