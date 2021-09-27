@@ -1,9 +1,9 @@
 args = {...}
 
-os.loadAPI("./loggingLib.lua")
+os.loadAPI("CC-Programs/loggingLib.lua")
 log = loggingLib
 
-os.loadAPI("./util.lua")
+os.loadAPI("CC-Programs/util.lua")
 
 config = {
   targetmB = 0
