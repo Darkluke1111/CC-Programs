@@ -21,6 +21,21 @@ config = {
   }
 }
 
+local function writeC(text, color)
+  local old = term.getTextColor()
+  term.setTextColor(color)
+  write(text)
+  term.setTextColor(old)
+end
+
+local function log(loggingLevel, msg)
+  if config.minLoggingPrio <= config.levels[loggingLevel].prio then
+    writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
+    writeC(msg .. "\n", colors.white)
+    rednet.broadcast({type = loggingLevel, msg = msg}, "Logging")
+  end
+end
+
 function setMinLoggingPrio(prio)
   config.minLoggingPrio = prio
 end
@@ -53,20 +68,5 @@ function logNetwork()
   while true do
     local senderID, msg = rednet.receive("Logging", 10)
     log(msg.type, "(" .. senderID .. ") " .. msg.msg)
-  end
-end
-
-local function writeC(text, color)
-  local old = term.getTextColor()
-  term.setTextColor(color)
-  write(text)
-  term.setTextColor(old)
-end
-
-local function log(loggingLevel, msg)
-  if config.minLoggingPrio <= config.levels[loggingLevel].prio then
-    writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
-    writeC(msg .. "\n", colors.white)
-    rednet.broadcast({type = loggingLevel, msg = msg}, "Logging")
   end
 end
