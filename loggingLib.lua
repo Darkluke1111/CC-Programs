@@ -1,6 +1,6 @@
 
 config = {
-  minLoggingPrio = 0
+  minLoggingPrio = 0,
   levels = {
     Debug = {
       color = colors.blue,
