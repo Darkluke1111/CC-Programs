@@ -1,10 +1,16 @@
 args = {...}
 
+os.loadAPI("loggingLib.lua")
+log = loggingLib
+
+os.loadAPI("util.lua")
+
 config = {
   targetmB = 0
 }
 
 function main()
+  log.openNetwork()
   readConfig()
   r = wrapReactor()
   controlReactor(r)
@@ -13,16 +19,16 @@ end
 function readConfig()
   if args[1] then
     config.targetmB = tonumber(args[1])
-    logInfo("Target mB is set to " .. config.targetmB)
+    log.logInfo("Target mB is set to " .. config.targetmB)
   else
-    logInfo("Target mB is set to default of " .. config.targetmB)
+    log.logInfo("Target mB is set to default of " .. config.targetmB)
   end
 end
 
 function wrapReactor()
   for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) == "BigReactors-Reactor" then
-      logInfo("Wrapping Reactor at " ..  v)
+      log.logInfo("Wrapping Reactor at " ..  v)
       return peripheral.wrap(v)
     end
   end
@@ -32,7 +38,7 @@ end
 function controlReactor(r)
   logInfo("Start controlling...")
   while true do
-    yield()
+    util.yield()
     os.sleep(1)
     mBt = r.getHotFluidProducedLastTick()
     logInfo("mB/t: " .. mBt)
@@ -64,28 +70,6 @@ function adjustFuelRods(r,direction)
   else
     r.setControlRodLevel(maxIndex, maxLevel - 1)
   end
-end
-
-function logError(msg)
-  writeC("[Error] ", colors.red)
-  writeC(msg .. "\n", colors.white)
-end
-
-function logInfo(msg)
-  writeC("[Info] ", colors.yellow)
-  writeC(msg .. "\n", colors.white)
-end
-
-function writeC(text, color)
-  local old = term.getTextColor()
-  term.setTextColor(color)
-  write(text)
-  term.setTextColor(old)
-end
-
-function yield()
-  os.queueEvent("fakeEvent");
-  os.pullEvent();
 end
 
 main()
