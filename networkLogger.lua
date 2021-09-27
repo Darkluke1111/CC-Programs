@@ -4,7 +4,7 @@ args = {...}
 os.loadAPI("CC-Programs/loggingLib.lua")
 log = loggingLib
 
-main()
+
 
 
 function main()
@@ -17,3 +17,5 @@ function main()
   log.openNetwork()
   log.logNetwork()
 end
+
+main()
