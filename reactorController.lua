@@ -15,6 +15,7 @@ function readConfig()
     logInfo("Target mB is set to " .. config.targetmB)
   else
     logInfo("Target mB is set to default of " .. config.targetmB)
+  end
 end
 
 function wrapReactor()
