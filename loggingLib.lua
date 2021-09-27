@@ -1,16 +1,16 @@
 
 config = {
   levels = {
-    "Debug" = {
+    Debug = {
       color = colors.blue
     },
-    "Info" = {
+    Info = {
       color = colors.green
     },
-    "Warning" = {
+    Warning = {
       color = colors.yellow
     },
-    "Error" = {
+    Error = {
       color = colors.red
     },
   }
