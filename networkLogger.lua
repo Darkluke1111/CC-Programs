@@ -1,11 +1,10 @@
-args = {...}
+-- Simple Program that prints messages received by the network
+-- Taks a cmd line parameter to specify minimal priority for messages to be printed
 
+args = {...}
 
 os.loadAPI("CC-Programs/loggingLib.lua")
 log = loggingLib
-
-
-
 
 function main()
   loggingPrio = 20

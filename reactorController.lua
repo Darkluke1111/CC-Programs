@@ -1,3 +1,5 @@
+-- Controlls the fuelrods of a reactor, so that the reactor outputs the amount of steam specified in the first cmd line parameter (in mB/t)
+
 args = {...}
 
 os.loadAPI("CC-Programs/loggingLib.lua")
