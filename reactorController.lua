@@ -12,7 +12,7 @@ end
 
 function readConfig()
   if args[1] then
-    config.targetmB = args[1]
+    config.targetmB = tonumber(args[1])
     logInfo("Target mB is set to " .. config.targetmB)
   else
     logInfo("Target mB is set to default of " .. config.targetmB)
@@ -34,7 +34,7 @@ function controlReactor(r)
   while true do
     yield()
     os.sleep(1)
-    mBt = tonumber(r.getHotFluidProducedLastTick())
+    mBt = r.getHotFluidProducedLastTick()
     logInfo("mB/t: " .. mBt)
     if mBt > config.targetmB then
       adjustFuelRods(r,"up")
