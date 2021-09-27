@@ -33,7 +33,7 @@ function controlReactor(r)
   logInfo("Start controlling...")
   while true do
     yield()
-    mBt = r.getHotFluidProducesLastTick()
+    mBt = r.getHotFluidProducedLastTick()
     logInfo("Steam produced last tick: " .. mBt)
   end
 end
