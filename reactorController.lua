@@ -7,6 +7,7 @@ config = {
 function main()
   readConfig()
   r = wrapReactor()
+  controlReactor(r)
 end
 
 function readConfig()
@@ -28,8 +29,13 @@ function wrapReactor()
   logError(msg)
 end
 
-function controlReactor()
+function controlReactor(r)
   logInfo("Start controlling...")
+  while true do
+    yield()
+    mBt = r.getHotFluidProducesLastTick()
+    logInfo("Steam produced last tick: " .. mBt)
+  end
 end
 
 function logError(msg)
@@ -47,6 +53,11 @@ function writeC(text, color)
   term.setTextColor(color)
   write(text)
   term.setTextColor(old)
+end
+
+function yield()
+  os.queueEvent("fakeEvent");
+  os.pullEvent();
 end
 
 main()
