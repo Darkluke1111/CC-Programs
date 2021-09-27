@@ -1,4 +1,8 @@
 
+function main()
+  r = wrapReactor()
+end
+
 
 function wrapReactor()
   for _,v in pairs(peripheral.getNames()) do
@@ -17,3 +21,5 @@ end
 function logInfo(msg)
   write("[Info]" .. msg .. "\n")
 end
+
+main()
