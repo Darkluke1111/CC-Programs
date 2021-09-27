@@ -50,7 +50,7 @@ function adjustFuelRods(direction)
   local maxIndex = -1
   local minLevel = 101
   local minIndex = -1
-  for index,level in pairs(r.getControlRodsLevels())
+  for index,level in pairs(r.getControlRodsLevels()) do
     if level > maxLevel then
       maxLevel = level
       maxIndex = index
