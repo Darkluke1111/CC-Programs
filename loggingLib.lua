@@ -2,7 +2,7 @@
 
 
 function openNetwork()
-  for _,v in peripheral.getNames() do
+  for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) == "modem" then
       rednet.open(v)
     end
