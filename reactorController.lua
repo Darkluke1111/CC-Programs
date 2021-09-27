@@ -35,8 +35,7 @@ function controlReactor(r)
     yield()
     os.sleep(1)
     mBt = r.getHotFluidProducedLastTick()
-    local level = r.getControlRodsLevels()
-    logInfo("mB/t: " .. mBt .. "  RodLevel: " .. level)
+    logInfo("mB/t: " .. mBt)
     if mBt > config.targetmB then
       adjustFuelRods(r,"up")
     else
