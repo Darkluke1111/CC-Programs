@@ -1,20 +1,29 @@
 
 config = {
+  minLoggingPrio = 0
   levels = {
     Debug = {
-      color = colors.blue
+      color = colors.blue,
+      prio = 0
     },
     Info = {
-      color = colors.green
+      color = colors.green,
+      prio = 10
     },
     Warning = {
-      color = colors.yellow
+      color = colors.yellow,
+      prio = 20
     },
     Error = {
-      color = colors.red
+      color = colors.red,
+      prio = 30
     },
   }
 }
+
+function setMinLoggingPrio(prio)
+  config.minLoggingPrio = prio
+end
 
 function openNetwork()
   for _,v in pairs(peripheral.getNames()) do
@@ -22,12 +31,6 @@ function openNetwork()
       rednet.open(v)
     end
   end
-end
-
-local function log(loggingLevel, msg)
-  writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
-  writeC(msg .. "\n", colors.white)
-  rednet.broadcast({type = loggingLevel, msg = msg}, "Logging")
 end
 
 function debug(msg)
@@ -46,16 +49,24 @@ function error(msg)
   log("Error", msg)
 end
 
-function writeC(text, color)
+function logNetwork()
+  while true do
+    local senderID, msg = rednet.receive("Logging", 10)
+    log(msg.type, "(" .. senderID .. ") " .. msg.msg)
+  end
+end
+
+local function writeC(text, color)
   local old = term.getTextColor()
   term.setTextColor(color)
   write(text)
   term.setTextColor(old)
 end
 
-function logNetwork()
-  while true do
-    local senderID, msg = rednet.receive("Logging", 10)
-    log(msg.type, "(" .. senderID .. ") " .. msg.msg)
+local function log(loggingLevel, msg)
+  if config.minLoggingPrio <= config.levels[loggingLevel].prio then
+    writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
+    writeC(msg .. "\n", colors.white)
+    rednet.broadcast({type = loggingLevel, msg = msg}, "Logging")
   end
 end
