@@ -60,7 +60,7 @@ function adjustFuelRods(r,direction)
       minIndex = index
     end
   end
-  if(direction == "up")
+  if(direction == "up") then
     r.setControlRodLevel(minIndex, minLevel + 1)
   else
     r.setControlRodLevel(maxIndex, maxLevel - 1)
