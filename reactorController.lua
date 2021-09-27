@@ -20,7 +20,7 @@ function logError(msg)
 end
 
 function logInfo(msg)
-  writeC("[Error] ", colors.yellow)
+  writeC("[Info] ", colors.yellow)
   writeC(msg .. "\n", colors.white)
 end
 
