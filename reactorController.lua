@@ -1,8 +1,17 @@
+config = {
+  targetmB = 0
+}
 
 function main()
+
   r = wrapReactor()
 end
 
+function readConfig()
+  args = {...}
+  config.targetmB = args[1]
+  logInfo("Target mB is set to " .. config.targetmB)
+end
 
 function wrapReactor()
   for _,v in pairs(peripheral.getNames()) do
