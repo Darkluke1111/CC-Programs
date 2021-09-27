@@ -33,8 +33,15 @@ function controlReactor(r)
   logInfo("Start controlling...")
   while true do
     yield()
+    os.sleep(1)
     mBt = r.getHotFluidProducedLastTick()
-    logInfo("Steam produced last tick: " .. mBt)
+    local level = r.getControlRodsLevels()
+    logInfo("mB/t: " .. mBt .. "  RodLevel: " .. level)
+    if mBt > config.targetmB then
+      r.setControlRodsLevels(level + 1)
+    else
+      r.setControlRodsLevels(level - 1)
+    end
   end
 end
 
