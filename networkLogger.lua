@@ -4,6 +4,8 @@ args = {...}
 os.loadAPI("CC-Programs/loggingLib.lua")
 log = loggingLib
 
+main()
+
 
 function main()
   loggingPrio = 20
