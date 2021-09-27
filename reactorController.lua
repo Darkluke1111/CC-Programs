@@ -38,14 +38,14 @@ function controlReactor(r)
     local level = r.getControlRodsLevels()
     logInfo("mB/t: " .. mBt .. "  RodLevel: " .. level)
     if mBt > config.targetmB then
-      adjustFuelRods("up")
+      adjustFuelRods(r,"up")
     else
-      adjustFuelRods("down")
+      adjustFuelRods(r,"down")
     end
   end
 end
 
-function adjustFuelRods(direction)
+function adjustFuelRods(r,direction)
   local maxLevel = -1
   local maxIndex = -1
   local minLevel = 101
