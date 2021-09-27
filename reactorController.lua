@@ -34,7 +34,7 @@ function controlReactor(r)
   while true do
     yield()
     os.sleep(1)
-    mBt = r.getHotFluidProducedLastTick()
+    mBt = tonumber(r.getHotFluidProducedLastTick())
     logInfo("mB/t: " .. mBt)
     if mBt > config.targetmB then
       adjustFuelRods(r,"up")
