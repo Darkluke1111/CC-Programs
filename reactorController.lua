@@ -15,11 +15,20 @@ function wrapReactor()
 end
 
 function logError(msg)
-  write("[Error]" .. msg .. "\n")
+  writeC("[Error] ", colors.red)
+  writeC(msg .. "\n", colors.white)
 end
 
 function logInfo(msg)
-  write("[Info]" .. msg .. "\n")
+  writeC("[Error] ", colors.yellow)
+  writeC(msg .. "\n", colors.white)
+end
+
+function writeC(text, color)
+  local old = term.getTextColor()
+  term.setTextColor(color)
+  write(text)
+  term.setTextColor(old)
 end
 
 main()
