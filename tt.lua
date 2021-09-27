@@ -1,9 +1,19 @@
+-- All coordinates and directions are realtive to the turtles starting postion.
+-- Turtles ALWAYS start at 0,0,0 looking north (1,0,0)
+
+-- State of the turtle
 tts = {
+  -- look direction
   dir = vector.new(1,0,0),
+  -- position
   pos = vector.new(0,0,0),
+  -- positions of currently placed chunkloaders
   loadedChunks = {}
 }
 
+-- Config
+-- The turtle should be supplied with those items in the those slots for some
+-- functions to work properly
 ttc = {
   reservedSlots = {
     chunkLoaderSlot = 1,
@@ -12,12 +22,11 @@ ttc = {
   }
 }
 
-
-function setPos(newPos)
+local function setPos(newPos)
   tts.pos = newPos
 end
 
-function movePos(direction)
+local function movePos(direction)
   setPos(tts.pos + direction)
 end
 
@@ -30,6 +39,9 @@ WEST = vector.new(0,0,-1)
 
 directions = {NORTH,EAST,UP,SOUTH,WEST,DOWN}
 
+-- moves the trutle in the specified direction (Possibly turning it in the process)
+-- digging: Optional, if true makes the turtle dig out block in the way
+-- callback: Optional, is called after the move
 function move(direction, digging, callback)
   if direction == UP then
     s = up(digging)
@@ -43,6 +55,9 @@ function move(direction, digging, callback)
   return s
 end
 
+-- digs a tunnel in the specified direction with the specified length
+-- up: if true digs out all blocks above the turtle
+-- down: if true digs out all blocks below the turtle
 function digTunnel(direction,length,up,down)
   callback = function()
     if up then digUp() end
@@ -57,6 +72,7 @@ function digTunnel(direction,length,up,down)
   end
 end
 
+-- Similar to move(...)
 function forward(digging)
   success = false
   if not digging then
@@ -75,6 +91,7 @@ function forward(digging)
   end
 end
 
+-- Similar to move(...)
 function up(digging)
   success = false
   if not digging then
@@ -93,6 +110,7 @@ function up(digging)
   end
 end
 
+-- Similar to move(...)
 function down(digging)
   success = false
   if not digging then
@@ -111,28 +129,34 @@ function down(digging)
   end
 end
 
+-- wrapper for dig
 function dig()
   turtle.dig()
 end
 
+-- wrapper for dig
 function digUp()
   turtle.digUp()
 end
 
+-- wrapper for dig
 function digDown()
   turtle.digDown()
 end
 
+-- wrapper for turn
 function turnRight()
   turtle.turnRight()
   tts.dir = tts.dir:cross(UP)
 end
 
+-- wrapper for turn
 function turnLeft()
   turtle.turnLeft()
   tts.dir = tts.dir:cross(DOWN)
 end
 
+-- turn to the specified direction
 function turn(direction)
   direction = stripY(direction)
   if     direction:cross(UP)   == tts.dir then
@@ -145,13 +169,16 @@ function turn(direction)
   end
 end
 
+-- remove y component of a vector
 function stripY(v)
   return vector.new(v.x,0,v.z)
 end
 
+-- prints the state of the turtle to the terminal
 function printState()
   write(textutils.serialize(tts))
 end
+
 
 function pathFindTo(pos, digging, callback)
   visited = {}

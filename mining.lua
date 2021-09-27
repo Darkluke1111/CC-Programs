@@ -1,3 +1,5 @@
+-- Deprecated! Use tt.lua instead
+
 tState = {
   relPos = vector.new(),
   relDir = vector.new(1,0,0),
