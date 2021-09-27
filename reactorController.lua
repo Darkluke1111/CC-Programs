@@ -32,7 +32,7 @@ function wrapReactor()
       return peripheral.wrap(v)
     end
   end
-  logError(msg)
+  log.logError(msg)
 end
 
 function controlReactor(r)
@@ -41,7 +41,7 @@ function controlReactor(r)
     util.yield()
     os.sleep(1)
     mBt = r.getHotFluidProducedLastTick()
-    logInfo("mB/t: " .. mBt)
+    log.logInfo("mB/t: " .. mBt)
     if mBt > config.targetmB then
       adjustFuelRods(r,"up")
     else
