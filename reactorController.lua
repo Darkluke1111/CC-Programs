@@ -36,7 +36,7 @@ function wrapReactor()
 end
 
 function controlReactor(r)
-  logInfo("Start controlling...")
+  log.logInfo("Start controlling...")
   while true do
     util.yield()
     os.sleep(1)
