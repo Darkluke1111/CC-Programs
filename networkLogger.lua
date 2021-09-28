@@ -3,6 +3,7 @@
 
 args = {...}
 
+os.loadAPI("CC-Programs/util.lua")
 os.loadAPI("CC-Programs/loggingLib.lua")
 log = loggingLib
 
@@ -13,8 +14,18 @@ function main()
   end
 
   log.setMinLoggingPrio(loggingPrio)
-  log.openNetwork()
   log.logNetwork()
+end
+
+-- loggs messages received by the network (blocking)
+function logNetwork()
+  while true do
+    local senderID, msg = rednet.receive("Logging", 10)
+    if config.minLoggingPrio <= config.levels[loggingLevel].prio then
+      util.writeC("[" .. msg.type .. "] ", config.levels[msg.type].color)
+      util.writeC("(" .. senderID .. ") " .. msg .. "\n", colors.white)
+    end
+  end
 end
 
 main()

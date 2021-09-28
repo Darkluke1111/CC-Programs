@@ -1,5 +1,8 @@
+os.loadAPI("CC-Programs/util.lua")
+
 -- Configuration Table
 config = {
+  logFileName = "log.txt",
   minLoggingPrio = 0,
   levels = {
     Debug = {
@@ -21,20 +24,24 @@ config = {
   }
 }
 
--- Write text to the terminal in a color
-local function writeC(text, color)
-  local old = term.getTextColor()
-  term.setTextColor(color)
-  write(text)
-  term.setTextColor(old)
+local logFileHandle
+
+local function init() 
+  logFileHandle = fs.open(config.logfileName, fs.exists(config.logfileName) and "a" or "w")
+  openNetwork()
 end
 
 -- local function taht handles logging to the terminal
 local function log(loggingLevel, msg)
   if config.minLoggingPrio <= config.levels[loggingLevel].prio then
-    writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
-    writeC(msg .. "\n", colors.white)
+    -- write to terminal
+    util.writeC("[" .. loggingLevel .. "] ", config.levels[loggingLevel].color)
+    util.writeC(msg .. "\n", colors.white)
+    -- write to network
     rednet.broadcast({type = loggingLevel, msg = msg}, "Logging")
+    -- write to logFile
+    logFileHandle.writeLine("[" .. loggingLevel .. "] " .. msg)
+    logFileHandle.flush()
   end
 end
 
@@ -72,10 +79,4 @@ function error(msg)
   log("Error", msg)
 end
 
--- loggs messages received by the network (blocking)
-function logNetwork()
-  while true do
-    local senderID, msg = rednet.receive("Logging", 10)
-    log(msg.type, "(" .. senderID .. ") " .. msg.msg)
-  end
-end
+init()

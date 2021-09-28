@@ -40,3 +40,12 @@ function filter(arr,filter)
   end
   return newArr
 end
+
+-- Text Utils --
+
+function writeC(text, color)
+  local old = term.getTextColor()
+  term.setTextColor(color)
+  write(text)
+  term.setTextColor(old)
+end
