@@ -17,6 +17,7 @@ function placeBlockLine(dir,length)
   for i = 1,length-1 do
     tt.move(dir,true)
     turtle.placeDown()
+    log.debug("Placing block")
   end
 end
 
