@@ -58,13 +58,15 @@ function placeRectWall(length, width, height)
   end
 end
 
-function placeRoom(length, width, height)
+function placeRoom(length, width, height, roof)
   startPos = tt.tts.pos
   placeFloor(length,height)
   tt.pathFindTo(startPos + tt.UP)
   placeRectWall(length, width, height - 2)
-  tt.pathFindTo(startPos + (tt.UP * (height - 1)))
-  placeFloor(length,height)
+  if roof then
+    tt.pathFindTo(startPos + (tt.UP * (height - 1)))
+    placeFloor(length,height)
+  end
 end
 
 
