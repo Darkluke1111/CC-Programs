@@ -15,8 +15,8 @@ function main()
 
   while true do
     local senderID, msg = rednet.receive("Logging", 10)
-    if loggingPrio <= config.levels[msg.type].prio then
-      util.writeC("[" .. msg.type .. "] ", config.levels[msg.type].color)
+    if loggingPrio <= log.config.levels[msg.type].prio then
+      util.writeC("[" .. msg.type .. "] ", log.config.levels[msg.type].color)
       util.writeC("(" .. senderID .. ") " .. msg .. "\n", colors.white)
     end
   end
