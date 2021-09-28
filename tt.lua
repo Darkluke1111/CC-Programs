@@ -31,9 +31,14 @@ tts = {
 -- functions to work properly
 ttc = {
   reservedSlots = {
-    chunkLoaderSlot = 1,
-    enderChestSlot = 2,
-    torchSlot = 3
+  enderChestSlot = {
+      slot = 1,
+      item = "chickenChunks:chunk-loader"
+    },
+    chunkLoaderSlot = {
+      slot = 2,
+      item = "enderStorage:ender-chest"
+    }
   }
 }
 
@@ -195,10 +200,10 @@ end
 -- digging (Optional) if set to true the turtle will mine blocks in its way
 -- callback (Optional) executed after every successfull move
 function pathFindTo(pos, digging, callback)
-  visited = {}
+  local visited = {}
   while tts.pos ~= pos do
     table.insert(visited, tts.pos)
-    _moves = {unpack(directions)}
+    local _moves = {unpack(directions)}
     function comp(x,y)
       return (pos - tts.pos - x):length() < (pos - tts.pos - y):length()
     end
@@ -270,19 +275,19 @@ end
 -- Digs out the block beneath the turtle to make room for the chest
 function emptyInventoy()
   digDown()
-  turtle.select(ttc.reservedSlots.enderChestSlot)
+  turtle.select(ttc.reservedSlots.enderChestSlot.slot)
   success = turtle.placeDown()
   if not success then
     log.error("Unable to place Chest")
     return false
   end
   for i = 1,16 do
-    if not util.contains(ttc.reservedSlots,i) then
+    if not util.contains(util.mapTo(ttc.reservedSlots,"slot"),i) then
       turtle.select(i)
       turtle.dropDown()
     end
   end
-  turtle.select(ttc.reservedSlots.enderChestSlot)
+  turtle.select(ttc.reservedSlots.enderChestSlot.slot)
   digDown()
   return true
 end
@@ -290,7 +295,7 @@ end
 -- Tests whether all not reserved slots are full
 function inventoryIsFull()
   for i = 1,16 do
-    if (not util.contains(ttc.reservedSlots,i)) and (turtle.getItemCount(i) == 0) then
+    if (not util.contains(util.mapTo(ttc.reservedSlots,"slot"),i)) and (turtle.getItemCount(i) == 0) then
       return false
     end
   end
@@ -300,7 +305,7 @@ end
 -- Places a chunkloader to load the 9 chunks around. Remembers its position.
 -- Digs out the block beneath the turtle to make room for the chunkloader
 function loadChunk()
-  turtle.select(ttc.reservedSlots.chunkLoaderSlot)
+  turtle.select(ttc.reservedSlots.chunkLoaderSlot.slot)
   digDown()
   success = turtle.placeDown()
   if not success then
@@ -317,7 +322,7 @@ function unloadOldestChunk(digging)
   currentDir = tts.dir
   loader = table.remove(tts.loadedChunks,1)
   pathFindTo(loader + UP,digging)
-  turtle.select(ttc.reservedSlots.chunkLoaderSlot)
+  turtle.select(ttc.reservedSlots.chunkLoaderSlot.slot)
   if not turtle.compareDown() then
     sendError("Unable to unload Chunk")
     return false
@@ -341,4 +346,8 @@ function mineTheWorld(n)
   end
   unloadOldestChunk()
   emptyInventoy()
+end
+
+function validateInventoryIntegrity()
+  -- not implemented
 end
