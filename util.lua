@@ -23,6 +23,13 @@ function map(arr,f)
   return newArr
 end
 
+function mapTo(arr, childname)
+  return map(
+    arr, 
+    function(e) return e[childname] end
+  )
+end
+
 -- arr has to be an array style table!
 function filter(arr,filter)
   local newArr = {}
