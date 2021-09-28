@@ -36,10 +36,34 @@ end
 function placeWall(dir,length, height)
   placeBlockLine(dir,length)
   for i = 1,height-1 do
-    tt.move(tt.UP)
+    tt.move(tt.UP,true)
     dir = - dir
     placeBlockLine(dir,length)
   end
+end
+
+function placeRectWall(length, width, height)
+  placeBlockLine(tt.NORTH,length)
+  placeBlockLine(tt.EAST,length)
+  placeBlockLine(tt.SOUTH,length)
+  placeBlockLine(tt.WEST,length)
+
+  for i = 1,height-1 do
+    tt.move(tt.UP,true)
+    placeBlockLine(tt.NORTH,length)
+    placeBlockLine(tt.EAST,length)
+    placeBlockLine(tt.SOUTH,length)
+    placeBlockLine(tt.WEST,length)
+  end
+end
+
+function placeRoom(length, width, height)
+  startPos = tt.tts.pos
+  placeFloor(length,height)
+  tt.pathFindTo(startPos + tt.UP)
+  placeRectWall(length, width, height - 2)
+  tt.pathFindTo(startPos + (tt.UP * (height - 1)))
+  placeFloor(length,height)
 end
 
 
