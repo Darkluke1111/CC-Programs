@@ -1,7 +1,7 @@
 args = {...}
 
-os.loadAPI("tt.lua")
-os.loadAPI("loggingLib.lua")
+os.loadAPI("CC-Programs/tt.lua")
+os.loadAPI("CC-Programs/loggingLib.lua")
 log = loggingLib
 
 coonfig = {
