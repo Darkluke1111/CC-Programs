@@ -27,7 +27,7 @@ config = {
 local logFileHandle
 
 local function init() 
-  logFileHandle = fs.open(config.logfileName, fs.exists(config.logfileName) and "a" or "w")
+  logFileHandle = fs.open(config.logFileName, fs.exists(config.logFileName) and "a" or "w")
   openNetwork()
 end
 
