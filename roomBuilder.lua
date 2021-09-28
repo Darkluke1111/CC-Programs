@@ -24,7 +24,7 @@ end
 function placeFloor(length, width)
   placeBlockLine(tt.NORTH,length)
   for i = 1, width - 1 do
-    tt.move(tt.EAST)
+    tt.move(tt.EAST,true)
     if i%2 == 0 then
       placeBlockLine(tt.NORTH,length)
     else
