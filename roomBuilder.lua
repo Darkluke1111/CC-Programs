@@ -13,6 +13,7 @@ function parseArgs()
 end
 
 function placeBlockLine(dir,length)
+  turtle.digDown()
   turtle.placeDown()
   for i = 1,length-1 do
     tt.move(dir,true)
