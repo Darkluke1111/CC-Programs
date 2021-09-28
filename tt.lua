@@ -52,9 +52,72 @@ end
 
 directions = {NORTH,EAST,UP,SOUTH,WEST,DOWN}
 
+-- Similar to move(...)
+local function forward(digging)
+  local success = false
+  if not digging then
+    success = turtle.forward()
+  else
+    while not success do
+      dig()
+      success = turtle.forward()
+    end
+  end
+  if success then
+    movePos(tts.dir)
+    return true
+  else
+    return false
+  end
+end
+
+-- Similar to move(...)
+local function up(digging)
+  local success = false
+  if not digging then
+    success = turtle.up()
+  else
+    while not success do
+      digUp()
+      success = turtle.up()
+    end
+  end
+  if success then
+    movePos(UP)
+    return true
+  else
+    return false
+  end
+end
+
+-- Similar to move(...)
+local function down(digging)
+  local success = false
+  if not digging then
+    success = turtle.down()
+  else
+    while not success do
+      digDown()
+      success = turtle.down()
+    end
+  end
+  if success then
+    movePos(DOWN)
+    return true
+  else
+    return false
+  end
+end
+
 -- moves the trutle in the specified direction (Possibly turning it in the process)
 -- digging: Optional, if true makes the turtle dig out block in the way
 function move(direction, digging)
+
+  if turtle.getFuelLevel() == 0 then
+    log.error("Turtle wants to move but is out of Fuel!")
+    return false
+  end
+
   -- s: Was the move successfull
   local s = false 
   if direction == UP then
@@ -86,63 +149,6 @@ function digTunnel(direction,length,up,down)
     if inventoryIsFull() then
       emptyInventoy()
     end
-  end
-end
-
--- Similar to move(...)
-function forward(digging)
-  local success = false
-  if not digging then
-    success = turtle.forward()
-  else
-    while not success do
-      dig()
-      success = turtle.forward()
-    end
-  end
-  if success then
-    movePos(tts.dir)
-    return true
-  else
-    return false
-  end
-end
-
--- Similar to move(...)
-function up(digging)
-  local success = false
-  if not digging then
-    success = turtle.up()
-  else
-    while not success do
-      digUp()
-      success = turtle.up()
-    end
-  end
-  if success then
-    movePos(UP)
-    return true
-  else
-    return false
-  end
-end
-
--- Similar to move(...)
-function down(digging)
-  local success = false
-  if not digging then
-    success = turtle.down()
-  else
-    while not success do
-      digDown()
-      success = turtle.down()
-    end
-  end
-  if success then
-    movePos(DOWN)
-    return true
-  else
-    return false
   end
 end
 
