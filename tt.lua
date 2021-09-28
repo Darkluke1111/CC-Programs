@@ -1,4 +1,6 @@
 os.loadAPI("CC-Programs/util.lua")
+os.loadAPI("CC-Programs/loggingLib.lua")
+log = loggingLib
 
 
 -- All coordinates and directions are realtive to the turtles starting postion.
@@ -271,7 +273,7 @@ function emptyInventoy()
   turtle.select(ttc.reservedSlots.enderChestSlot)
   success = turtle.placeDown()
   if not success then
-    sendError("Unable to place Chest")
+    log.error("Unable to place Chest")
     return false
   end
   for i = 1,16 do
@@ -302,7 +304,7 @@ function loadChunk()
   digDown()
   success = turtle.placeDown()
   if not success then
-    sendError("Unable to load Chunk")
+    log.error("Unable to load Chunk")
     return false
   end
   table.insert(tts.loadedChunks,tts.pos + DOWN)
@@ -326,24 +328,9 @@ function unloadOldestChunk(digging)
   return true
 end
 
-function connectNetwork()
-  for _,v in pairs(peripheral.getNames()) do
-    if peripheral.getType(v) == "modem" then
-      rednet.open(v)
-      rednet.broadcast(os.getComputerID() .. " is online :D", "welcome")
-    end
-  end
-end
-
-function sendError(error)
-  spos = textutils.serialize(tts.pos)
-  write("Error! " .. error .. "\n")
-  rednet.broadcast(os.getComputerID() .. " at " .. spos .. ": " + error)
-end
-
 -- mines n chunks (with 21 height) into the direction the turtle faces
 function mineTheWorld(n)
-  connectNetwork()
+  log.openNetwork()
   loadChunk()
   for i = 1,n do
     mineCube(16,21,16)
