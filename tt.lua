@@ -1,5 +1,16 @@
+os.loadAPI("CC-Programs/util.lua")
+
+
 -- All coordinates and directions are realtive to the turtles starting postion.
 -- Turtles ALWAYS start at 0,0,0 looking north (1,0,0)
+
+UP = vector.new(0,1,0)
+DOWN = vector.new(0,-1,0)
+NORTH = vector.new(1,0,0)
+SOUTH = vector.new(-1,0,0)
+EAST = vector.new(0,0,1)
+WEST = vector.new(0,0,-1)
+ZERO = vector.new(0,0,0)
 
 -- State of the turtle
 tts = {
@@ -7,6 +18,8 @@ tts = {
   dir = vector.new(1,0,0),
   -- position
   pos = vector.new(0,0,0),
+  visited = { ZERO },
+  digged = {},
   -- positions of currently placed chunkloaders
   loadedChunks = {}
 }
@@ -30,19 +43,13 @@ local function movePos(direction)
   setPos(tts.pos + direction)
 end
 
-UP = vector.new(0,1,0)
-DOWN = vector.new(0,-1,0)
-NORTH = vector.new(1,0,0)
-SOUTH = vector.new(-1,0,0)
-EAST = vector.new(0,0,1)
-WEST = vector.new(0,0,-1)
-
 directions = {NORTH,EAST,UP,SOUTH,WEST,DOWN}
 
 -- moves the trutle in the specified direction (Possibly turning it in the process)
 -- digging: Optional, if true makes the turtle dig out block in the way
--- callback: Optional, is called after the move
-function move(direction, digging, callback)
+function move(direction, digging)
+  -- s: Was the move successfull
+  local s = false 
   if direction == UP then
     s = up(digging)
   elseif direction == DOWN then
@@ -51,7 +58,6 @@ function move(direction, digging, callback)
     turn(direction)
     s = forward(digging)
   end
-  if callback and s then callback() end
   return s
 end
 
@@ -59,13 +65,17 @@ end
 -- up: if true digs out all blocks above the turtle
 -- down: if true digs out all blocks below the turtle
 function digTunnel(direction,length,up,down)
-  callback = function()
+
+  local callback = function()
     if up then digUp() end
     if down then digDown() end
   end
+
   callback()
   for i= 1,length do
-    move(direction,true,callback)
+    if move(direction,true) then 
+      callback() 
+    end
     if inventoryIsFull() then
       emptyInventoy()
     end
@@ -74,7 +84,7 @@ end
 
 -- Similar to move(...)
 function forward(digging)
-  success = false
+  local success = false
   if not digging then
     success = turtle.forward()
   else
@@ -93,7 +103,7 @@ end
 
 -- Similar to move(...)
 function up(digging)
-  success = false
+  local success = false
   if not digging then
     success = turtle.up()
   else
@@ -112,7 +122,7 @@ end
 
 -- Similar to move(...)
 function down(digging)
-  success = false
+  local success = false
   if not digging then
     success = turtle.down()
   else
@@ -179,7 +189,9 @@ function printState()
   write(textutils.serialize(tts))
 end
 
-
+-- turtle tries to reach the specified position.
+-- digging (Optional) if set to true the turtle will mine blocks in its way
+-- callback (Optional) executed after every successfull move
 function pathFindTo(pos, digging, callback)
   visited = {}
   while tts.pos ~= pos do
@@ -190,13 +202,18 @@ function pathFindTo(pos, digging, callback)
     end
     table.sort(_moves, comp)
     for _,m in pairs(_moves) do
-      if not contains(visited,tts.pos + m) then
-        if move(m, digging, callback) then break end
+      if not util.contains(visited,tts.pos + m) then
+        if move(m, digging) then 
+          if callback then callback() end
+          break 
+        end
       end
     end
   end
 end
 
+-- The turtle will mine out a cube with the specified size
+-- TODO: Does probably not work with negative sizes yet?
 function mineCube(x,y,z)
   startPos = tts.pos
   endPos = tts.pos + vector.new(x,y,z)
@@ -227,6 +244,7 @@ function mineCube(x,y,z)
   turn(NORTH)
 end
 
+-- Reset starting position/direction to current position/direction (for testing)
 function reset()
   tts = {
     dir = vector.new(1,0,0),
@@ -234,13 +252,7 @@ function reset()
   }
 end
 
-function contains(arr, elem)
-  for _,v in pairs(arr) do
-    if v == elem then return true end
-  end
-  return false
-end
-
+-- Select the inventoryslot containing an item with the specified name
 function selectItem(name)
   for i = 1,16 do
     local item = turtle.getItemDetail(i)
@@ -252,6 +264,8 @@ function selectItem(name)
   return nil
 end
 
+-- Epties all slots except reserved slots into an enderchest
+-- Digs out the block beneath the turtle to make room for the chest
 function emptyInventoy()
   digDown()
   turtle.select(ttc.reservedSlots.enderChestSlot)
@@ -261,7 +275,7 @@ function emptyInventoy()
     return false
   end
   for i = 1,16 do
-    if not contains(ttc.reservedSlots,i) then
+    if not util.contains(ttc.reservedSlots,i) then
       turtle.select(i)
       turtle.dropDown()
     end
@@ -271,15 +285,18 @@ function emptyInventoy()
   return true
 end
 
+-- Tests whether all not reserved slots are full
 function inventoryIsFull()
   for i = 1,16 do
-    if (not contains(ttc.reservedSlots,i)) and (turtle.getItemCount(i) == 0) then
+    if (not util.contains(ttc.reservedSlots,i)) and (turtle.getItemCount(i) == 0) then
       return false
     end
   end
   return true
 end
 
+-- Places a chunkloader to load the 9 chunks around. Remembers its position.
+-- Digs out the block beneath the turtle to make room for the chunkloader
 function loadChunk()
   turtle.select(ttc.reservedSlots.chunkLoaderSlot)
   digDown()
@@ -291,18 +308,20 @@ function loadChunk()
   table.insert(tts.loadedChunks,tts.pos + DOWN)
 end
 
-function unloadOldestChunk()
+-- Removes the oldest remembered chunkloader. The turtle will return to its original position
+-- after removing the chunkloader
+function unloadOldestChunk(digging)
   currentPos = tts.pos
   currentDir = tts.dir
   loader = table.remove(tts.loadedChunks,1)
-  pathFindTo(loader + UP,true)
+  pathFindTo(loader + UP,digging)
   turtle.select(ttc.reservedSlots.chunkLoaderSlot)
   if not turtle.compareDown() then
     sendError("Unable to unload Chunk")
     return false
   end
   digDown()
-  pathFindTo(currentPos,true)
+  pathFindTo(currentPos,digging)
   turn(currentDir)
   return true
 end
@@ -322,6 +341,7 @@ function sendError(error)
   rednet.broadcast(os.getComputerID() .. " at " .. spos .. ": " + error)
 end
 
+-- mines n chunks (with 21 height) into the direction the turtle faces
 function mineTheWorld(n)
   connectNetwork()
   loadChunk()
