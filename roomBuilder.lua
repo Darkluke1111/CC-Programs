@@ -16,13 +16,22 @@ function placeBlockLine(dir,length)
   turtle.placeDown()
   for i = 1,length-1 do
     tt.move(dir,true)
+    turtle.digDown()
     turtle.placeDown()
-    log.debug("Placing block")
   end
 end
 
-
-function buildRoom()
-
+function placeFloor(length, width)
+  placeBlockLine(tt.NORTH,length)
+  for i = 1, width - 1 do
+    tt.move(tt.EAST)
+    if i%2 == 0 then
+      placeBlockLine(tt.NORTH,length)
+    else
+      placeBlockLine(tt.SOUTH,length)
+    end
+  end
+  tt.turn(tt.NORTH)
 end
+
 
