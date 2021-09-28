@@ -31,7 +31,15 @@ function placeFloor(length, width)
       placeBlockLine(tt.SOUTH,length)
     end
   end
-  tt.turn(tt.NORTH)
+end
+
+function placeWall(dir,length, height)
+  placeBlockLine(dir,length)
+  for i = 1,height-1 do
+    tt.move(tt.UP)
+    dir = - dir
+    placeBlockLine(dir,length)
+  end
 end
 
 
