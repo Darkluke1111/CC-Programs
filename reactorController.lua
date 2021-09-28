@@ -12,7 +12,7 @@ config = {
 }
 
 function main()
-  log.openNetwork()
+  log.config.minLoggingPrio = 10
   readConfig()
   r = wrapReactor()
   controlReactor(r)
@@ -43,7 +43,7 @@ function controlReactor(r)
     util.yield()
     os.sleep(1)
     mBt = r.getHotFluidProducedLastTick()
-    log.info("mB/t: " .. mBt)
+    log.debug("mB/t: " .. mBt)
     if mBt > config.targetmB then
       adjustFuelRods(r,"up")
     else
