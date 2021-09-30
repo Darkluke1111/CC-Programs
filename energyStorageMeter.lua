@@ -10,7 +10,7 @@ local e
 
 function main()
   m = util.connectToPeripheralType("monitor")
-  e = util.connectToPeripheralType("energy_storage")
+  e = util.connectToPeripheralType("mekanism:induction_port")
 
   term.redirect(m)
   width, height = term.getSize()
