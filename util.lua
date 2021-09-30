@@ -53,7 +53,7 @@ end
 -- Peripheral Utils --
 
 function connectToPeripheralType(type)
-  for _,v in paris(peripheral.getNames()) do
+  for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) ==  type then
       m = peripheral.wrap(v)
       return
