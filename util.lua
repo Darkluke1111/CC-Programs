@@ -49,3 +49,15 @@ function writeC(text, color)
   write(text)
   term.setTextColor(old)
 end
+
+-- Peripheral Utils --
+
+function connectToPeripheralType(type)
+  for _,v in paris(peripherals.getNames()) do
+    if peripherals.getType(v) ==  type then
+      m = peripherals.wrap(v)
+      return
+    end
+  end
+  log.error("No " .. type .. " found!")
+end
