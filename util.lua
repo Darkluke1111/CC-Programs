@@ -55,9 +55,8 @@ end
 function connectToPeripheralType(type)
   for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) ==  type then
-      m = peripheral.wrap(v)
-      return
+      p = peripheral.wrap(v)
+      return p
     end
   end
-  log.error("No " .. type .. " found!")
 end
