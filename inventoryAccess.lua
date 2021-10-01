@@ -9,12 +9,13 @@ local system, managed
 
 function main()
     system, managed = connectToPeripherals()
-    log.debug(textutils.serialize(getAvailableItems(system)))
+    emptyManagedInventory()
     makeAvailable("minecraft:cobblestone", 1)
 end
 
 function connectToPeripherals()
     local system = util.connectToPeripheralTypeAll("appliedenergistics2:interface")
+    -- local system = util.connectToPeripheralTypeAll("minecraft:chest")
     log.debug("Connected to " .. #system .. " Interfaces")
     local managed = util.connectToPeripheralType("enderstorage:ender_chest")
     if managed then
@@ -29,7 +30,7 @@ function getAvailableItems()
     local items = {}
     for _,v in pairs(system) do
         for i = 1,v.size() do
-            table.insert(items,v.wrap.getItemDetail(i))
+            table.insert(items,v.getItemDetail(i))
         end
     end
     return items
@@ -39,10 +40,18 @@ function makeAvailable(itemName, amount)
     for _,v in pairs(system) do
         for i = 1,v.size() do
             local item = v.getItemDetail(i)
-            if item.name == itemName then
-                v.pullItem(managed.name,i,amount)
+            if item and item.name == itemName then
+                log.debug("Pulling from " .. v.name .. " to " .. managed.name)
+                v.pushItems(managed.name,i)
+                return
             end
         end
+    end
+end
+
+function emptyManagedInventory()
+    for i = 1,managed.size() do
+        managed.pushItems(system[1].name,i)
     end
 end
 
