@@ -5,14 +5,15 @@ os.loadAPI("CC-Programs/loggingLib.lua")
 local log = loggingLib
 local util = util
 
+local protocol =  "InvAccess"
+
 local system, managed
 local cache
 
 function main()
     system, managed = connectToPeripherals()
     recalcCache()
-    emptyManagedInventory()
-    makeAvailable("minecraft:cobblestone", 1)
+    listenNetwork()
 end
 
 function connectToPeripherals()
@@ -55,14 +56,14 @@ function recalcCache()
     end
 
     cache = tmp
-    log.debug("New cached Items: " .. textutils.serialize(util.mapTo(cache,"item")))
+    log.debug("New cached Items: " .. textutils.serialize(util.mapTo(cache, "item")))
 end
 
 function makeAvailable(itemName, amount)
     for _, entry in pairs(cache) do
         if entry.item.name == itemName then
             log.debug("Pulling from " .. entry.inv.name .. " to " .. managed.name)
-            local  moved = entry.inv.pushItems(managed.name, entry.slot, amount)
+            local moved = entry.inv.pushItems(managed.name, entry.slot, amount)
             log.debug("Moved items: " .. moved)
             return
         end
@@ -76,13 +77,18 @@ function emptyManagedInventory()
 end
 
 function listenNetwork()
-    local senderID, msg = rednet.receive("InvAccess", 10)
-    log.debug("Received a message from " .. senderID)
-end
+    log.debug("Starting Listening for requests...")
+    while true do
+        local senderID, msg = rednet.receive(protocol, 10)
+        log.debug("Received a message from " .. senderID .. ":")
+        log.debug(textutils.serialize(msg))
 
-function handleMessage()
+        emptyManagedInventory()
+        for _, request in pairs(msg) do
+            makeAvailable(request.item, request.amount)
+        end
+        rednet.send(senderID, 0, protocol)
+    end
 end
-
-Message = {}
 
 main()
