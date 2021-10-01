@@ -5,7 +5,7 @@ os.loadAPI("CC-Programs/loggingLib.lua")
 local log = loggingLib
 local util = util
 
-local protocol =  "InvAccess"
+local protocol = "InvAccess"
 
 local system, managed
 local cache
@@ -77,17 +77,21 @@ function emptyManagedInventory()
 end
 
 function listenNetwork()
+    local modem = util.connectToPeripheralType("modem")
+    rednet.open(modem.name)
     log.debug("Starting Listening for requests...")
     while true do
         local senderID, msg = rednet.receive(protocol, 10)
-        log.debug("Received a message from " .. senderID .. ":")
-        log.debug(textutils.serialize(msg))
+        if senderID then
+            log.debug("Received a message from " .. senderID .. ":")
+            log.debug(textutils.serialize(msg))
 
-        emptyManagedInventory()
-        for _, request in pairs(msg) do
-            makeAvailable(request.item, request.amount)
+            emptyManagedInventory()
+            for _, request in pairs(msg) do
+                makeAvailable(request.item, request.amount)
+            end
+            rednet.send(senderID, 0, protocol)
         end
-        rednet.send(senderID, 0, protocol)
     end
 end
 
