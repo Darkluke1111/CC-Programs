@@ -7,6 +7,7 @@ local util = util
 
 function main()
     local system, managed = connectToPeripherals()
+    log.debug(textutils.serialize(getAvailableItems(system)))
 end
 
 function connectToPeripherals()
@@ -19,6 +20,16 @@ function connectToPeripherals()
         log.error("No ender chest connected!")
     end
     return system, managed
+end
+
+function getAvailableItems(system)
+    local items = {}
+    for _,v in pairs(system) do
+        for i = 1,v.size() do
+            table.insert(items,system.getItemDetail(i))
+        end
+    end
+    return items
 end
 
 function listenNetwork()
