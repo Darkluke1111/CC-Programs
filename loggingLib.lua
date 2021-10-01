@@ -24,7 +24,7 @@ config = {
   }
 }
 
-local function init() 
+local function init()
   logFileHandle = fs.open(config.logFileName, fs.exists(config.logFileName) and "a" or "w")
   openNetwork()
 end

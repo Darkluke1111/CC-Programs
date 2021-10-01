@@ -60,3 +60,13 @@ function connectToPeripheralType(type)
     end
   end
 end
+
+function connectToPeripheralTypeAll(type)
+  local ps = {}
+  for _,v in pairs(peripheral.getNames()) do
+    if peripheral.getType(v) ==  type then
+      table.insert(ps,peripheral.wrap(v))
+    end
+  end
+  return ps
+end
