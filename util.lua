@@ -55,7 +55,8 @@ end
 function connectToPeripheralType(type)
   for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) ==  type then
-      p = peripheral.wrap(v)
+      local p = peripheral.wrap(v)
+      p.name = v
       return p
     end
   end
@@ -65,7 +66,9 @@ function connectToPeripheralTypeAll(type)
   local ps = {}
   for _,v in pairs(peripheral.getNames()) do
     if peripheral.getType(v) ==  type then
-      table.insert(ps,peripheral.wrap(v))
+      local p = peripheral.wrap(v)
+      p.name = v
+      table.insert(ps,p)
     end
   end
   return ps
