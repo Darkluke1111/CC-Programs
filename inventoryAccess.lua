@@ -26,7 +26,7 @@ function getAvailableItems(system)
     local items = {}
     for _,v in pairs(system) do
         for i = 1,v.size() do
-            table.insert(items,system.getItemDetail(i))
+            table.insert(items,v.getItemDetail(i))
         end
     end
     return items
