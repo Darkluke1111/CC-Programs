@@ -6,9 +6,11 @@ local log = loggingLib
 local util = util
 
 local system, managed
+local cache
 
 function main()
     system, managed = connectToPeripherals()
+    recalcCache()
     emptyManagedInventory()
     makeAvailable("minecraft:cobblestone", 1)
 end
@@ -28,30 +30,48 @@ end
 
 function getAvailableItems()
     local items = {}
-    for _,v in pairs(system) do
-        for i = 1,v.size() do
-            table.insert(items,v.getItemDetail(i))
+    for _, v in pairs(system) do
+        for i = 1, v.size() do
+            table.insert(items, v.getItemDetail(i))
         end
     end
     return items
 end
 
-function makeAvailable(itemName, amount)
-    for _,v in pairs(system) do
-        for i = 1,v.size() do
+function recalcCache()
+    local tmp = {}
+    for _, v in pairs(system) do
+        for i = 1, v.size() do
             local item = v.getItemDetail(i)
-            if item and item.name == itemName then
-                log.debug("Pulling from " .. v.name .. " to " .. managed.name)
-                v.pushItems(managed.name,i)
-                return
+            if item then
+                local entry = {
+                    item = item,
+                    inv = v,
+                    slot = i
+                }
+                table.insert(tmp, entry)
             end
+        end
+    end
+
+    cache = tmp
+    log.debug("New cached Items: " .. textutils.serialize(util.mapTo(cache,"item")))
+end
+
+function makeAvailable(itemName, amount)
+    for _, entry in pairs(cache) do
+        if entry.item.name == itemName then
+            log.debug("Pulling from " .. entry.inv.name .. " to " .. managed.name)
+            local  moved = entry.inv.pushItems(managed.name, entry.slot, amount)
+            log.debug("Moved items: " .. moved)
+            return
         end
     end
 end
 
 function emptyManagedInventory()
-    for i = 1,managed.size() do
-        managed.pushItems(system[1].name,i)
+    for i = 1, managed.size() do
+        managed.pushItems(system[1].name, i)
     end
 end
 
@@ -59,5 +79,10 @@ function listenNetwork()
     local senderID, msg = rednet.receive("InvAccess", 10)
     log.debug("Received a message from " .. senderID)
 end
+
+function handleMessage()
+end
+
+Message = {}
 
 main()
