@@ -11,11 +11,18 @@ local me = peripheral.find("meBridge")
 local playerInv = peripheral.find("inventoryManager")
 
 function handler(user, command, params)
-    if command == "pull" then
-        pullItem(params[2], tonumber(params[3]))
-    elseif command == "push" then
-        pushItem(params[2], tonumber(params[3]))
+    if playerInv.getOwner() ~= user then
+        return "There is no access to your Inventory!"
     end
+    if command == "pull" then
+        local amount = pullItem(params[2], tonumber(params[3]))
+        return tostring(amount) .. " items were moved"
+    elseif command == "push" then
+        local amount = pushItem(params[2], tonumber(params[3]))
+        return tostring(amount) .. " items were moved"
+    end
+
+    return "An unknown Error has occured!"
 end
 
 function pullItem(item, count)

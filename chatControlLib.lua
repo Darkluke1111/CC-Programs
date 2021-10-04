@@ -13,7 +13,8 @@ function listenForMessage(callback)
 
         if util.contains(whitelist, user) then
             command  = split(msg, " ")
-            callback(user, command[1], command)
+            response = callback(user, command[1], command)
+            chat.sendMessageToPlayer(response,user,"InvManager")
         end
     end
 end
