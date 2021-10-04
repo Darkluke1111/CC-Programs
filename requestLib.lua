@@ -1,4 +1,4 @@
-args = {...}
+
 
 os.loadAPI("CC-Programs/util.lua")
 os.loadAPI("CC-Programs/loggingLib.lua")
@@ -16,3 +16,7 @@ function requestItem(name, amount)
     }
     rednet.broadcast(request,protocol)
 end
+
+function requestItems(items)
+
+    e
