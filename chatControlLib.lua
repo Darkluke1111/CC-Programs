@@ -7,13 +7,13 @@ local whitelist = {
     "Darkluke1111"
 }
 
-function listenForMessage()
+function listenForMessage(callback)
     while true do
         _, user, msg = os.pullEvent("chat")
 
         if util.contains(whitelist, user) then
-            command  = split(msg)
-            os.queueEvent("command", user, command[1], command)
+            command  = split(msg, " ")
+            callback(user, command[1], command)
         end
     end
 end
