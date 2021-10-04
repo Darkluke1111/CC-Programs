@@ -12,9 +12,16 @@ function listenForMessage()
         _, user, msg = os.pullEvent("chat")
 
         if util.contains(whitelist, user) then
-            chat.sendMessageToPlayer("Received your message!", user, "Your buddy")
+            command  = split(msg)
+            os.queueEvent("command", user, command[1], command)
         end
     end
 end
 
-listenForMessage()
+function split(s, delimiter)
+    local result = {};
+    for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+        table.insert(result, match);
+    end
+    return result;
+end
