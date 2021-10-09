@@ -12,7 +12,7 @@ local ar = peripheral.find("arController")
 
 local craftingGoals = {
     {
-        name = "[Stick]",
+        name = "minecraft:stick",
         count = 64
     }
 }
@@ -31,7 +31,7 @@ function recraft(craftingGoal)
     local craftable =  false
     local meItem
     for _,item in pairs(me.listCraftableItems()) do
-        if item.displayName == craftingGoal.name then
+        if item.name == craftingGoal.name then
             craftable = true
             meItem = item
         end
@@ -44,7 +44,7 @@ function recraft(craftingGoal)
     -- check how many items are already there
     local craftAmount = craftingGoal.count
     for _,item in pairs(me.listItems()) do
-        if item.displayName == craftingGoal.name then
+        if item.name == craftingGoal.name then
             craftAmount = craftAmount - item.amount
         end
     end
