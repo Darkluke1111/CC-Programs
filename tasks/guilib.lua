@@ -47,8 +47,8 @@ function drawButton(xMin, yMin, xMax, yMax, text, color)
 
     local tw = #text
     log.debug("Textlength: " .. tw)
-    local yMid = math.floor((yMin + yMax) / 2)
-    local xMid = math.floor((xMin + xMax) / 2)
+    local yMid = math.floor((yMin + yMax) / 2) +1
+    local xMid = math.floor((xMin + xMax) / 2) +1
     local xTextStart = math.floor(xMid - tw/2)
 
     m.setBackgroundColor(color)
