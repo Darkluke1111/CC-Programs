@@ -34,7 +34,7 @@ end
 
 function Gui:handleTouch(x, y)
     log.debug("Touch at x:" .. x .. " y:" .. y)
-    root:handleClick(x,y)
+    self.root:handleClick(x,y)
 end
 
 -- ###### Pane ###### --
