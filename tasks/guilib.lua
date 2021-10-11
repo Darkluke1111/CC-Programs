@@ -51,7 +51,8 @@ function drawButton(xMin, yMin, xMax, yMax, text, color)
 
     m.setBackgroundColor(color)
     for i = yMin, yMax do
-        for j = xMin, xMax do
+        local j = xMin
+        while j <= xMax do
             if i == yMid and j == math.floor(yMid - tw/2) then
                 m.setCursorPos(j, i)
                 m.write(text)
@@ -59,6 +60,7 @@ function drawButton(xMin, yMin, xMax, yMax, text, color)
             else
                 m.setCursorPos(j, i)
                 m.write(" ")
+                j = j+1
             end
         end
     end
