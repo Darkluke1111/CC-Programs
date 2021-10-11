@@ -33,7 +33,7 @@ function Button:new(width, height, text, color)
     return button
 end
 
-function Button:handleClick  ()
+function Button:handleClick()
     log.debug("The button '" ..  self.text .. "' was clicked!")
 end
 
@@ -61,7 +61,7 @@ function Gui:handleTouch(x,y)
         local b = l.button
         local p = l.pos
         if x >= p.x and x <= p.x + b.width and y >= p.y and y <= p.y + b.height then
-            b.handleClick()
+            b:handleClick()
         end
     end
 end
