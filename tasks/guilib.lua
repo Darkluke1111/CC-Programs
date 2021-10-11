@@ -34,7 +34,7 @@ end
 
 function Gui:handleTouch(x, y)
     log.debug("Touch at x:" .. x .. " y:" .. y)
-    self.root:handleClick(x,y)
+    self.root:handleClick({x=x,y=y})
 end
 
 -- ###### Pane ###### --
@@ -65,7 +65,7 @@ function Pane:draw(pos)
     end
 end
 
-function Pane:handleClick(x, y)
+function Pane:handleClick(pos)
     for _, child in pairs(self.children) do
         local c = child.child
         local p = child.pos
@@ -132,6 +132,40 @@ function VBox:addChild(pane)
     )
 end
 
+-- ###### DrawPane ##### --
+
+DrawPane = Pane:new()
+
+function DrawPane:new(width, height)
+    local drawPane = {
+        width = width,
+        height = height,
+        colored = {}
+    }
+    self.__index = self
+    setmetatable(drawPane, DrawPane)
+    return drawPane
+end
+
+function DrawPane:draw(pos)
+    for i = 1, self.height do
+        for j = 1, self.width do
+            m.setCursorPos(pos.x + j, pos.y + i)
+            local color = colored[flatten({x=j,y=i},self.width)] or colors.black
+            m.setBackgroundColor(color)
+            m.write(" ")
+        end
+    end
+end
+
+function DrawPane:handleClick(pos)
+    if colored[flatten(pos,self.width)] == colors.red then
+        colored[flatten(pos,self.width)] = colors.black
+    else
+        colored[flatten(pos,self.width)] = colors.red
+    end
+end
+
 -- ###### statics ##### --
 
 function clear()
@@ -150,6 +184,10 @@ function drawRect(xMin, yMin, xMax, yMax, color)
             m.write(" ")
         end
     end
+end
+
+function flatten(pos,w)
+    return pos.x + pos.y*w
 end
 
 function drawButton(b, pos)
