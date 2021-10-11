@@ -67,7 +67,7 @@ function Pane:draw(pos)
     for _, child in pairs(self.children) do
         local c = child.child
         local p = child.pos
-        c.draw({x = pos.x + p.x, y = pos.y + p.y})
+        c:draw({x = pos.x + p.x, y = pos.y + p.y})
     end
 end
 
