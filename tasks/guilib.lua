@@ -24,7 +24,7 @@ function Gui:new(root)
 end
 
 function Gui:start()
-    self.root.draw(1,1)
+    self.root:draw(1,1)
 
     while true do
         _, _, x, y = os.pullEvent("monitor_touch")
