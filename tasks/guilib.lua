@@ -133,6 +133,39 @@ function VBox:addChild(pane)
     )
 end
 
+-- ###### HBox ###### --
+
+HBox = Pane:new(10, 10, colors.black)
+
+function HBox:new(width, height, color)
+    local hBox = {
+        width = width,
+        height = height,
+        color = color,
+        children = {}
+    }
+    self.__index = self
+    setmetatable(hBox, HBox)
+    return hBox
+end
+
+function HBox:addChild(pane)
+    pane.height = self.height
+
+    local nextX = 1
+    for _, child in pairs(self.children) do
+        local xEnd = child.pos.x + child.child.width + 1
+        nextX = xEnd > nextX and xEnd or nextX
+    end
+    table.insert(
+        self.children,
+        {
+            pos = {x = nextX + 1, y = 2},
+            child = pane
+        }
+    )
+end
+
 -- ###### DrawPane ##### --
 
 DrawPane = Pane:new()
