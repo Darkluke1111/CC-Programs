@@ -56,6 +56,7 @@ function Gui:start()
 end
 
 function Gui:handleTouch(x,y)
+    log.debug("Touch at x:" .. x .. " y:" .. y)
     for _,l in pairs(self.layout) do
         local b = l.button
         local p = l.pos
