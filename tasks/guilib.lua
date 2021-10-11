@@ -51,7 +51,7 @@ function Gui:start()
 
     while true do
         _,_,x,y = os.pullEvent("monitor_touch")
-        self.handleTouch(x,y)
+        handleTouch(x,y)
     end
 end
 
