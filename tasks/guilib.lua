@@ -13,6 +13,8 @@ Pane = {
     color = bgc
 }
 
+Button = Pane:new(10,3,bgc)
+
 Gui = {
     layout = {}
 }
@@ -31,8 +33,14 @@ function Pane:new(width, height, color)
 end
 
 function Button:new(width, height, text, color)
-    local button = Pane:new(width,height,color)
-    button.text = text or "Button"
+    local button = {
+        width = width,
+        height = height,
+        text = text,
+        color = color
+    }
+    self.__index = self
+    setmetatable(button,Button)
     return button
 end
 
