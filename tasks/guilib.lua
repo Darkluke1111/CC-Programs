@@ -7,11 +7,16 @@ local height, width = m.getSize()
 local bgc = colors.black
 local fgc = colors.red
 
+Gui = {
+    layout = {}
+}
+
 Button = {
     width = 10,
     height = 5,
     text = "Button",
-    color = bgc
+    color = bgc,
+
 }
 
 m.setTextScale(0.5)
@@ -25,6 +30,50 @@ function Button.new(width, height, text, color)
     }
     setmetatable(button,Button)
     return button
+end
+
+function Button:handleClick  ()
+    log.debug("The button '" ..  self.text .. "' was clicked!")
+end
+
+function Gui.new()
+    local gui = {}
+
+    setmetatable(gui,Gui)
+    return gui
+end
+
+function Gui:start()
+    for _,l in pairs(self.layout) do
+        drawButton(l.button, l.pos)
+    end
+
+    while true do
+        _,_,x,y = os.pullEvent("monitor_touch")
+        self.handleTouch(x,y)
+    end
+end
+
+function Gui:handleTouch(x,y)
+    for _,l in pairs(self.layout) do
+        local b = l.button
+        local p = l.pos
+        if x >= p.x and x <= p.x + b.width and y >= p.y and y <= p.y + b.height then
+            b.handleClick()
+        end
+    end
+end
+
+function Gui:addButton(b)
+    local nextY = 1
+    for _,l in layout do
+        local yEnd = l.pos.y + l.button.height
+        nextY = yEnd > nextY and yEnd or nextY
+    end
+    table.insert(layout, {
+        button = b,
+        pos = {x=1, y=nextY+1}
+    })
 end
 
 function clear()
