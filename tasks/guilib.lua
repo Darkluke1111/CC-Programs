@@ -12,11 +12,13 @@ m.setTextScale(0.5)
 
 -- ###### GUI ###### --
 Gui = {
-    layout = {}
+    root = nil
 }
 
-function Gui:new()
-    local gui = {}
+function Gui:new(root)
+    local gui = {
+        root = root
+    }
     self.__index = self
     setmetatable(gui,Gui)
     return gui
@@ -39,21 +41,9 @@ function Gui:handleTouch(x,y)
         local b = l.button
         local p = l.pos
         if x >= p.x and x <= p.x + b.width and y >= p.y and y <= p.y + b.height then
-            b:handleClick()
+            b:handleClick({x = x-p.x, y = y-p.y})
         end
     end
-end
-
-function Gui:addButton(b)
-    local nextY = 1
-    for _,l in pairs(self.layout) do
-        local yEnd = l.pos.y + l.button.height + 1
-        nextY = yEnd > nextY and yEnd or nextY
-    end
-    table.insert(self.layout, {
-        button = b,
-        pos = {x=2, y=nextY+1}
-    })
 end
 
 -- ###### Pane ###### --
@@ -61,18 +51,37 @@ end
 Pane = {
     width = 0,
     height = 0,
-    color = bgc
+    color = bgc,
 }
 
 function Pane:new(width, height, color)
     local pane = {
         width = width,
         height = height,
-        color = color
+        color = color,
+        children = {}
     }
     self.__index = self
     setmetatable(pane,Pane)
     return pane
+end
+
+function Pane:draw(pos)
+    for _, child in pairs(self.children) do
+        local c = child.child
+        local p = child.pos
+        c.draw({x = pos.x + p.x, y = pos.y + p.y})
+    end
+end
+
+function Pane:handleClick(x,y)
+    for _, child in pairs(self.children) do
+        local c = child.child
+        local p = child.pos
+        if x >= p.x and x <= p.x + c.width and y >= p.y and y <= p.y + c.height then
+            c:handleClick({x = x-p.x, y = y-p.y})
+        end
+    end
 end
 
 -- ###### Button ###### --
@@ -91,9 +100,47 @@ function Button:new(width, height, text, color)
     return button
 end
 
-function Button:handleClick()
+function Button:handleClick(pos)
     log.debug("The button '" ..  self.text .. "' was clicked!")
 end
+
+function Button:draw(pos)
+    drawButton(self,pos)
+end
+
+-- ###### VBox ###### --
+
+VBox = Pane:new(10,10,colors.black)
+
+function VBox:new(width, height, color)
+    local vBox = {
+        width = width,
+        height = height,
+        color = color,
+        children = {}
+    }
+    self.__index = self
+    setmetatable(vBox,VBox)
+    return vBox
+end
+
+function VBox:addChild(pane)
+    pane.width = self.width
+
+    local nextY = 1
+    for _,child in pairs(self.children) do
+        local yEnd = child.pos.y + child.child.height + 1
+        nextY = yEnd > nextY and yEnd or nextY
+    end
+    table.insert(self.layout, {
+        pos = {x=2, y=nextY+1},
+        child = pane
+    })
+end
+
+
+
+-- ###### statics ##### --
 
 function clear()
     m.setBackgroundColor(bgc)
