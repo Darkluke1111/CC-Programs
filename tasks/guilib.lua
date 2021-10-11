@@ -34,13 +34,7 @@ end
 
 function Gui:handleTouch(x, y)
     log.debug("Touch at x:" .. x .. " y:" .. y)
-    for _, l in pairs(self.layout) do
-        local b = l.button
-        local p = l.pos
-        if x >= p.x and x <= p.x + b.width and y >= p.y and y <= p.y + b.height then
-            b:handleClick({x = x - p.x, y = y - p.y})
-        end
-    end
+    root:handleClick(x,y)
 end
 
 -- ###### Pane ###### --
