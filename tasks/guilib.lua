@@ -152,7 +152,7 @@ function DrawPane:draw(pos)
     for i = 1, self.height do
         for j = 1, self.width do
             m.setCursorPos(pos.x + j, pos.y + i)
-            local color = self.colored[flatten({x=j-1,y=i-1},self.width)] or colors.black
+            local color = self.colored[flatten({x=j+1,y=i+1},self.width)] or colors.black
             m.setBackgroundColor(color)
             m.write(" ")
         end
