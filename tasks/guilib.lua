@@ -29,7 +29,7 @@ function Gui:start()
     while true do
         _, _, x, y = os.pullEvent("monitor_touch")
         self:handleTouch(x, y)
-        self.root.draw({x=1,y=1})
+        self.root:draw({x=1,y=1})
     end
 end
 
