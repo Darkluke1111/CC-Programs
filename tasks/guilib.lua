@@ -21,13 +21,14 @@ Button = {
 
 m.setTextScale(0.5)
 
-function Button.new(width, height, text, color)
+function Button:new(width, height, text, color)
     local button = {
         width = width,
         height = height,
         text = text,
         color = color
     }
+    self.__index = self
     setmetatable(button,Button)
     return button
 end
@@ -36,9 +37,9 @@ function Button:handleClick  ()
     log.debug("The button '" ..  self.text .. "' was clicked!")
 end
 
-function Gui.new()
+function Gui:new()
     local gui = {}
-
+    self.__index = self
     setmetatable(gui,Gui)
     return gui
 end
