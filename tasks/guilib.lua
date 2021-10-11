@@ -258,3 +258,9 @@ function drawButton(b, pos)
         end
     end
 end
+
+function getConnection(pos1, pos2)
+    return {}
+end
+
+
