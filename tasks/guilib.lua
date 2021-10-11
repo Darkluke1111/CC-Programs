@@ -38,7 +38,7 @@ function drawButton(xMin, yMin, xMax, yMax, text, color)
 
     local bw = xMax - xMin
     if #text > bw then
-        local newLength = bw - 3 > 0 or 0
+        local newLength = bw - 3 > 0 and bw - 3 or 0
         text = string.sub(text, 1, newLength)
         while #text < bw do
             text = text .. "."
