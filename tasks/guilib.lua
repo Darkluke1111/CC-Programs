@@ -7,46 +7,13 @@ local height, width = m.getSize()
 local bgc = colors.black
 local fgc = colors.red
 
-Pane = {
-    width = 0,
-    height = 0,
-    color = bgc
-}
+m.setTextScale(0.5)
 
-function Pane:new(width, height, color)
-    local pane = {
-        width = width,
-        height = height,
-        color = color
-    }
-    self.__index = self
-    setmetatable(pane,Pane)
-    return pane
-end
 
-Button = Pane:new(10,3,bgc)
-
+-- ###### GUI ###### --
 Gui = {
     layout = {}
 }
-
-m.setTextScale(0.5)
-
-function Button:new(width, height, text, color)
-    local button = {
-        width = width,
-        height = height,
-        text = text,
-        color = color
-    }
-    self.__index = self
-    setmetatable(button,Button)
-    return button
-end
-
-function Button:handleClick()
-    log.debug("The button '" ..  self.text .. "' was clicked!")
-end
 
 function Gui:new()
     local gui = {}
@@ -87,6 +54,45 @@ function Gui:addButton(b)
         button = b,
         pos = {x=2, y=nextY+1}
     })
+end
+
+-- ###### Pane ###### --
+
+Pane = {
+    width = 0,
+    height = 0,
+    color = bgc
+}
+
+function Pane:new(width, height, color)
+    local pane = {
+        width = width,
+        height = height,
+        color = color
+    }
+    self.__index = self
+    setmetatable(pane,Pane)
+    return pane
+end
+
+-- ###### Button ###### --
+
+Button = Pane:new(10,3,bgc)
+
+function Button:new(width, height, text, color)
+    local button = {
+        width = width,
+        height = height,
+        text = text,
+        color = color
+    }
+    self.__index = self
+    setmetatable(button,Button)
+    return button
+end
+
+function Button:handleClick()
+    log.debug("The button '" ..  self.text .. "' was clicked!")
 end
 
 function clear()
