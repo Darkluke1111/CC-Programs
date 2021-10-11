@@ -23,6 +23,7 @@ function Button.new(width, height, text, color)
     button.height = height
     button.text = text
     button.color = color
+    return button
 end
 
 function clear()
