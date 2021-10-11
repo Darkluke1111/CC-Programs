@@ -151,7 +151,7 @@ function DrawPane:draw(pos)
     for i = 1, self.height do
         for j = 1, self.width do
             m.setCursorPos(pos.x + j, pos.y + i)
-            local color = colored[flatten({x=j,y=i},self.width)] or colors.black
+            local color = self.colored[flatten({x=j,y=i},self.width)] or colors.black
             m.setBackgroundColor(color)
             m.write(" ")
         end
@@ -159,10 +159,10 @@ function DrawPane:draw(pos)
 end
 
 function DrawPane:handleClick(pos)
-    if colored[flatten(pos,self.width)] == colors.red then
-        colored[flatten(pos,self.width)] = colors.black
+    if self.colored[flatten(pos,self.width)] == colors.red then
+        self.colored[flatten(pos,self.width)] = colors.black
     else
-        colored[flatten(pos,self.width)] = colors.red
+        self.colored[flatten(pos,self.width)] = colors.red
     end
 end
 
