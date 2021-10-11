@@ -24,9 +24,7 @@ function Gui:new(root)
 end
 
 function Gui:start()
-    for _, l in pairs(self.layout) do
-        drawButton(l.button, l.pos)
-    end
+    root.draw(1,1)
 
     while true do
         _, _, x, y = os.pullEvent("monitor_touch")
