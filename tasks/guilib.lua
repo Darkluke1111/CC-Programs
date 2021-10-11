@@ -13,14 +13,6 @@ Pane = {
     color = bgc
 }
 
-Button = Pane:new(10,3,bgc)
-
-Gui = {
-    layout = {}
-}
-
-m.setTextScale(0.5)
-
 function Pane:new(width, height, color)
     local pane = {
         width = width,
@@ -31,6 +23,14 @@ function Pane:new(width, height, color)
     setmetatable(pane,Pane)
     return pane
 end
+
+Button = Pane:new(10,3,bgc)
+
+Gui = {
+    layout = {}
+}
+
+m.setTextScale(0.5)
 
 function Button:new(width, height, text, color)
     local button = {
