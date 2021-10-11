@@ -9,7 +9,6 @@ local fgc = colors.red
 
 m.setTextScale(0.5)
 
-
 -- ###### GUI ###### --
 Gui = {
     root = nil
@@ -20,28 +19,28 @@ function Gui:new(root)
         root = root
     }
     self.__index = self
-    setmetatable(gui,Gui)
+    setmetatable(gui, Gui)
     return gui
 end
 
 function Gui:start()
-    for _,l in pairs(self.layout) do
+    for _, l in pairs(self.layout) do
         drawButton(l.button, l.pos)
     end
 
     while true do
-        _,_,x,y = os.pullEvent("monitor_touch")
-        self:handleTouch(x,y)
+        _, _, x, y = os.pullEvent("monitor_touch")
+        self:handleTouch(x, y)
     end
 end
 
-function Gui:handleTouch(x,y)
+function Gui:handleTouch(x, y)
     log.debug("Touch at x:" .. x .. " y:" .. y)
-    for _,l in pairs(self.layout) do
+    for _, l in pairs(self.layout) do
         local b = l.button
         local p = l.pos
         if x >= p.x and x <= p.x + b.width and y >= p.y and y <= p.y + b.height then
-            b:handleClick({x = x-p.x, y = y-p.y})
+            b:handleClick({x = x - p.x, y = y - p.y})
         end
     end
 end
@@ -51,7 +50,7 @@ end
 Pane = {
     width = 0,
     height = 0,
-    color = bgc,
+    color = bgc
 }
 
 function Pane:new(width, height, color)
@@ -62,7 +61,7 @@ function Pane:new(width, height, color)
         children = {}
     }
     self.__index = self
-    setmetatable(pane,Pane)
+    setmetatable(pane, Pane)
     return pane
 end
 
@@ -74,19 +73,19 @@ function Pane:draw(pos)
     end
 end
 
-function Pane:handleClick(x,y)
+function Pane:handleClick(x, y)
     for _, child in pairs(self.children) do
         local c = child.child
         local p = child.pos
         if x >= p.x and x <= p.x + c.width and y >= p.y and y <= p.y + c.height then
-            c:handleClick({x = x-p.x, y = y-p.y})
+            c:handleClick({x = x - p.x, y = y - p.y})
         end
     end
 end
 
 -- ###### Button ###### --
 
-Button = Pane:new(10,3,bgc)
+Button = Pane:new(10, 3, bgc)
 
 function Button:new(width, height, text, color)
     local button = {
@@ -96,21 +95,21 @@ function Button:new(width, height, text, color)
         color = color
     }
     self.__index = self
-    setmetatable(button,Button)
+    setmetatable(button, Button)
     return button
 end
 
 function Button:handleClick(pos)
-    log.debug("The button '" ..  self.text .. "' was clicked!")
+    log.debug("The button '" .. self.text .. "' was clicked!")
 end
 
 function Button:draw(pos)
-    drawButton(self,pos)
+    drawButton(self, pos)
 end
 
 -- ###### VBox ###### --
 
-VBox = Pane:new(10,10,colors.black)
+VBox = Pane:new(10, 10, colors.black)
 
 function VBox:new(width, height, color)
     local vBox = {
@@ -120,7 +119,7 @@ function VBox:new(width, height, color)
         children = {}
     }
     self.__index = self
-    setmetatable(vBox,VBox)
+    setmetatable(vBox, VBox)
     return vBox
 end
 
@@ -128,17 +127,18 @@ function VBox:addChild(pane)
     pane.width = self.width
 
     local nextY = 1
-    for _,child in pairs(self.children) do
+    for _, child in pairs(self.children) do
         local yEnd = child.pos.y + child.child.height + 1
         nextY = yEnd > nextY and yEnd or nextY
     end
-    table.insert(self.layout, {
-        pos = {x=2, y=nextY+1},
-        child = pane
-    })
+    table.insert(
+        self.children,
+        {
+            pos = {x = 2, y = nextY + 1},
+            child = pane
+        }
+    )
 end
-
-
 
 -- ###### statics ##### --
 
@@ -174,9 +174,9 @@ function drawButton(b, pos)
 
     local tw = #text
     log.debug("Textlength: " .. tw)
-    local xMid = math.floor(pos.x + width / 2) +1
-    local yMid = math.floor(pos.y + height/ 2) +1
-    local xTextStart = math.floor(xMid - tw/2)
+    local xMid = math.floor(pos.x + width / 2) + 1
+    local yMid = math.floor(pos.y + height / 2) + 1
+    local xTextStart = math.floor(xMid - tw / 2)
 
     m.setBackgroundColor(b.color)
     for i = pos.y, pos.y + height do
@@ -185,11 +185,11 @@ function drawButton(b, pos)
             if i == yMid and j == xTextStart then
                 m.setCursorPos(j, i)
                 m.write(text)
-                j = j+tw
+                j = j + tw
             else
                 m.setCursorPos(j, i)
                 m.write(" ")
-                j = j+1
+                j = j + 1
             end
         end
     end
