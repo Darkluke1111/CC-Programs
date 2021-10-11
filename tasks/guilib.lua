@@ -48,12 +48,13 @@ function drawButton(xMin, yMin, xMax, yMax, text, color)
     local tw = #text
     log.debug("Textlength: " .. tw)
     local yMid = math.floor((yMin + yMax) / 2)
+    local xTextStart = math.floor(xMin + tw/2)
 
     m.setBackgroundColor(color)
     for i = yMin, yMax do
         local j = xMin
         while j <= xMax do
-            if i == yMid and j == math.floor(yMid - tw/2) then
+            if i == yMid and j == xTextStart then
                 m.setCursorPos(j, i)
                 m.write(text)
                 j = j+tw
