@@ -1,3 +1,6 @@
+os.loadAPI("CC-Programs/loggingLib.lua")
+local log = loggingLib
+
 local m = peripheral.find("monitor")
 
 local height, width = m.getSize()
@@ -24,11 +27,12 @@ function drawRect(xMin, yMin, xMax, yMax, color)
     end
 end
 
-function drawButton(xMin, yMin, xMax, yMax, color, text)
+function drawButton(xMin, yMin, xMax, yMax, text, color)
     if not color then
         color = fgc
     end
     if not text or text == "" then
+        log.debug("No text provided!")
         drawRect(xMin, yMin, xMax, yMax, color)
     end
 
@@ -42,12 +46,13 @@ function drawButton(xMin, yMin, xMax, yMax, color, text)
     end
 
     local tw = #text
-    local yMid = (yMin + yMax) / 2
+    log.debug("Textlength: " .. tw)
+    local yMid = math.floor((yMin + yMax) / 2)
 
     m.setBackgroundColor(color)
     for i = yMin, yMax do
         for j = xMin, xMax do
-            if i == yMid and j == yMid - tw/2 then
+            if i == yMid and j == math.floor(yMid - tw/2) then
                 m.setCursorPos(j, i)
                 m.write(text)
                 j = j+tw
