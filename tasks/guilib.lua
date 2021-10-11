@@ -7,29 +7,32 @@ local height, width = m.getSize()
 local bgc = colors.black
 local fgc = colors.red
 
+Pane = {
+    width = 0,
+    height = 0,
+    color = bgc
+}
+
 Gui = {
     layout = {}
 }
 
-Button = {
-    width = 10,
-    height = 5,
-    text = "Button",
-    color = bgc,
-
-}
-
 m.setTextScale(0.5)
 
-function Button:new(width, height, text, color)
-    local button = {
+function Pane:new(width, height, color)
+    local pane = {
         width = width,
         height = height,
-        text = text,
         color = color
     }
     self.__index = self
-    setmetatable(button,Button)
+    setmetatable(pane,Pane)
+    return pane
+end
+
+function Button:new(width, height, text, color)
+    local button = Pane:new(width,height,color)
+    button.text = text or "Button"
     return button
 end
 
