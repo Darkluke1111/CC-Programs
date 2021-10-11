@@ -7,7 +7,7 @@ local height, width = m.getSize()
 local bgc = colors.black
 local fgc = colors.red
 
-local Button = {
+Button = {
     width = 10,
     height = 5,
     text = "Button",
