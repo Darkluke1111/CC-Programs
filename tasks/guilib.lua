@@ -71,7 +71,7 @@ function Gui:addButton(b)
         local yEnd = l.pos.y + l.button.height
         nextY = yEnd > nextY and yEnd or nextY
     end
-    table.insert(layout, {
+    table.insert(self.layout, {
         button = b,
         pos = {x=1, y=nextY+1}
     })
