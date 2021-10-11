@@ -67,7 +67,7 @@ end
 
 function Gui:addButton(b)
     local nextY = 1
-    for _,l in layout do
+    for _,l in pairs(self.layout) do
         local yEnd = l.pos.y + l.button.height
         nextY = yEnd > nextY and yEnd or nextY
     end
