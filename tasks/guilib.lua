@@ -17,12 +17,13 @@ Button = {
 m.setTextScale(0.5)
 
 function Button.new(width, height, text, color)
-    local button = {}
+    local button = {
+        width = width,
+        height = height,
+        text = text,
+        color = color
+    }
     setmetatable(button,Button)
-    button.width = width
-    button.height = height
-    button.text = text
-    button.color = color
     return button
 end
 
